@@ -27,12 +27,13 @@ import java.text.DecimalFormat;
 public class MDA_HW2_PageMul {
     
     private static int pages = 5;
-    private static float B = 0.85f;
+    private static float B = 0.8f;
     
 
     public static class MatrixMapper
         extends Mapper<Object, Text, Text, Text>{
     private String flag;
+    
     @Override
     protected void setup(Context context) throws IOException,InterruptedException{
         FileSplit split = (FileSplit) context.getInputSplit();
@@ -46,8 +47,6 @@ public class MDA_HW2_PageMul {
         int k = Integer.parseInt(conf.get("k"));
         Text Map_key = new Text();
         Text Map_value = new Text();
-        
-
         if(flag.equals("tmp1"))
         {
             String [] mapAndreduce = value.toString().split(",");
@@ -58,7 +57,7 @@ public class MDA_HW2_PageMul {
                 context.write(Map_key,Map_value);
             }
         }
-        else if(flag.equals("input_pr5"))
+        else
         {
             String [] mapAndreduce = value.toString().split("\t");
             for(int i=1;i<=m;i++)
@@ -67,7 +66,6 @@ public class MDA_HW2_PageMul {
                 Map_value.set("N,"+mapAndreduce[0]+","+mapAndreduce[1]);
                 context.write(Map_key,Map_value);
             }
-
         }
 
         }
@@ -109,7 +107,7 @@ public static class MatrixReducer
           result = result + m_ij*n_jk;
         }
         String [] key_string = key.toString().split(",");
-        DecimalFormat df = new DecimalFormat("#.###");
+        DecimalFormat df = new DecimalFormat("0.000");
         context.write(new Text(key_string[0]),new Text(df.format(result)));
     }
 }

@@ -71,7 +71,7 @@ public static class MatrixReducer
 public static void run (Map<String , String> path) throws Exception {
     Configuration conf = new Configuration();
     conf.set("page","5");
-    conf.set("Beta","0.85");
+    conf.set("Beta","0.8");
     Job job = new Job(conf, "MatrixAdj");
     job.setJarByClass(MDA_HW2_Adj.class);
     job.setMapperClass(MatrixMapper.class);

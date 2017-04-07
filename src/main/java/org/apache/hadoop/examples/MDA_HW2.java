@@ -15,9 +15,11 @@ public class MDA_HW2{
       Map<String, String> path = setInOut();
       try{
         MDA_HW2_Adj.run(path);
-        int Iter = 10;
-        for(int i=0; i < Iter ;i++)
+        int Iter = 1;
+        for(int i=0; i < Iter ;i++){
             MDA_HW2_PageMul.run(path);
+            MDA_HW2_compen.run(path);
+        }
         sortAndWrite(path);
       }
       catch(Exception e){
@@ -31,10 +33,10 @@ public class MDA_HW2{
     path.put("pr","/user/root/data/input_pr5");
     path.put("tmp1","/user/root/data/tmp1");
     path.put("tmp2","/user/root/data/tmp2");
+    path.put("tmp3","/user/root/data/tmp3");
     path.put("output","/user/root/output/pagerank5");
     return path;
   }
-  
   
   private static void sortAndWrite(Map<String,String> path){
     try{
