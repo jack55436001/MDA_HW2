@@ -26,7 +26,7 @@ import java.text.DecimalFormat;
 
 public class MDA_HW2_PageMul {
     
-    private static int pages = 10878;
+    private static int pages = 10879;
     private static float B = 0.8f;
     
 
@@ -50,7 +50,7 @@ public class MDA_HW2_PageMul {
         if(flag.equals("tmp1"))
         {
             String [] mapAndreduce = value.toString().split(",");
-            for(int i=0;i<=k;i++)
+            for(int i=0;i<k;i++)
             {
                 Map_key.set(mapAndreduce[1]+","+Integer.toString(i));
                 Map_value.set(mapAndreduce[0]+","+mapAndreduce[2]+","+mapAndreduce[3]);
@@ -60,9 +60,9 @@ public class MDA_HW2_PageMul {
         else
         {
             String [] mapAndreduce = value.toString().split("\t");
-            for(int i=0;i<=m;i++)
+            for(int i=0;i<m;i++)
             {
-                Map_key.set(Integer.toString(i)+",1");
+                Map_key.set(Integer.toString(i)+",0");
                 Map_value.set("N,"+mapAndreduce[0]+","+mapAndreduce[1]);
                 context.write(Map_key,Map_value);
             }
@@ -100,13 +100,16 @@ public static class MatrixReducer
         float m_ij,n_jk;
         float flee_v = (1-B)/(float)pages;
         
-        for(int i=0;i<=j;i++)
+        for(int i=0;i<j;i++)
         {
           m_ij = m.containsKey(i) ? m.get(i):flee_v;
           n_jk = n.containsKey(i) ? n.get(i):0;
           result = result + m_ij*n_jk;
         }
         String [] key_string = key.toString().split(",");
+        int check = Integer.parseInt(key_string[0]);
+        if(n.get(check) == 0)
+            result=0;
         DecimalFormat df = new DecimalFormat("0.000000000");
         context.write(new Text(key_string[0]),new Text(df.format(result)));
     }
@@ -131,8 +134,8 @@ public static void run(Map<String , String> path) throws Exception {
     String input = path.get("tmp1");
     String output = path.get("tmp2");
     String pr = path.get("pr");
-    conf.set("m","10878");
-    conf.set("j","10878");
+    conf.set("m","10879");
+    conf.set("j","10879");
     conf.set("k","1");
     removeFile(output,conf);
 

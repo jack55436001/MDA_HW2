@@ -48,7 +48,7 @@ public static class MatrixReducer
         int page = Integer.parseInt(conf.get("page"));
         float B = Float.parseFloat(conf.get("Beta"));
         float flee_v = (1-B)/(float)page;
-        float [] tmp = new float[page+1];
+        float [] tmp = new float[page];
         int sum=0;
         for(Text val : values){
           int index = Integer.parseInt(val.toString());
@@ -60,7 +60,7 @@ public static class MatrixReducer
           sum=1;
         }
         DecimalFormat df = new DecimalFormat("0.000000000");
-        for(int i=0;i<=page;i++){
+        for(int i=0;i<page;i++){
           StringBuilder sb = new StringBuilder();
           sb.append("M,"+i+","+key.toString()+","+df.format(flee_v+B*tmp[i]/(float)sum));
           context.write(null,new Text(sb.toString()));
@@ -71,7 +71,7 @@ public static class MatrixReducer
 
 public static void run (Map<String , String> path) throws Exception {
     Configuration conf = new Configuration();
-    conf.set("page","10878");
+    conf.set("page","10879");
     conf.set("Beta","0.8");
     Job job = new Job(conf, "MatrixAdj");
     job.setJarByClass(MDA_HW2_Adj.class);

@@ -27,7 +27,7 @@ import java.util.*;
 
 public class MDA_HW2_compen {
 
-    private static int pages = 10878;
+    private static int pages = 10879;
 
     public static class MatrixMapper
         extends Mapper<Object, Text, Text, Text>{
@@ -60,9 +60,11 @@ public class MDA_HW2_compen {
             V.add(Float.parseFloat(matrix[1]));
         }
         float compensate = (1-total)/(float)pages;
-        for (int i=0;i<=pages;i++){
+        for (int i=0;i<pages;i++){
             float r = 0;
             r = compensate + V.get(i);
+            if(V.get(i)==0)
+                r=0;
             DecimalFormat df = new DecimalFormat("0.000000000");
             context.write(new Text(K.get(i)),new Text(df.format(r)));
         }
