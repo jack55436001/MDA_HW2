@@ -18,6 +18,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import java.util.HashMap;
 import java.util.Map;
+import java.text.DecimalFormat;
 
 public class MDA_HW2_Adj {
 
@@ -46,7 +47,7 @@ public static class MatrixReducer
         Configuration conf = context.getConfiguration();
         int page = Integer.parseInt(conf.get("page"));
         float B = Float.parseFloat(conf.get("Beta"));
-        float flee_v = (1-B)/page;
+        float flee_v = (1-B)/(float)page;
         float [] tmp = new float[page+1];
         int sum=0;
         for(Text val : values){
@@ -58,10 +59,10 @@ public static class MatrixReducer
         if(sum==0){
           sum=1;
         }
-
-        for(int i=1;i<=page;i++){
+        DecimalFormat df = new DecimalFormat("0.000000000");
+        for(int i=0;i<=page;i++){
           StringBuilder sb = new StringBuilder();
-          sb.append("M,"+i+","+key.toString()+","+(float)(flee_v+B*tmp[i]/sum));
+          sb.append("M,"+i+","+key.toString()+","+df.format(flee_v+B*tmp[i]/(float)sum));
           context.write(null,new Text(sb.toString()));
         }
 
@@ -70,7 +71,7 @@ public static class MatrixReducer
 
 public static void run (Map<String , String> path) throws Exception {
     Configuration conf = new Configuration();
-    conf.set("page","5");
+    conf.set("page","10878");
     conf.set("Beta","0.8");
     Job job = new Job(conf, "MatrixAdj");
     job.setJarByClass(MDA_HW2_Adj.class);

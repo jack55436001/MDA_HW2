@@ -8,14 +8,14 @@ import org.apache.hadoop.conf.*;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.*;
-
+import java.text.DecimalFormat;
 
 public class MDA_HW2{
   public static void main(String[] args){
       Map<String, String> path = setInOut();
       try{
         MDA_HW2_Adj.run(path);
-        int Iter = 1;
+        int Iter = 20;
         for(int i=0; i < Iter ;i++){
             MDA_HW2_PageMul.run(path);
             MDA_HW2_compen.run(path);
@@ -29,12 +29,12 @@ public class MDA_HW2{
   }
   private static Map<String,String> setInOut(){
     Map<String, String> path = new HashMap<String, String>();
-    path.put("adj","/user/root/data/adj5.txt");
-    path.put("pr","/user/root/data/input_pr5");
+    path.put("adj","/user/root/data/p2p-Gnutella04.txt");
+    path.put("pr","/user/root/data/input_hw2");
     path.put("tmp1","/user/root/data/tmp1");
     path.put("tmp2","/user/root/data/tmp2");
     path.put("tmp3","/user/root/data/tmp3");
-    path.put("output","/user/root/output/pagerank5");
+    path.put("output","/user/root/output/pagerank_hw2");
     return path;
   }
   
@@ -65,8 +65,9 @@ public class MDA_HW2{
     	  });
          
         String content="";
+        DecimalFormat df = new DecimalFormat("0.000000000");
         for(int i=0;i<myList.size();i++)
-            content=content+myList.get(i).getKey()+"\t"+myList.get(i).getValue().toString()+"\n";
+            content=content+myList.get(i).getKey()+"\t"+df.format(myList.get(i).getValue())+"\n";
             
         byte[] buff = content.getBytes();
         
