@@ -11,9 +11,11 @@ import org.apache.hadoop.util.*;
 import java.text.DecimalFormat;
 
 public class MDA_HW2{
+  private static int pages = 10879;
   public static void main(String[] args){
       Map<String, String> path = setInOut();
       try{
+        createInitial(path);
         MDA_HW2_Adj.run(path);
         int Iter = 20;
         for(int i=0; i < Iter ;i++){
@@ -37,7 +39,28 @@ public class MDA_HW2{
     path.put("output","/user/root/output/pagerank_hw2");
     return path;
   }
-  
+  private static void createInitial(Map<String,String> path){
+       try{
+         FileSystem fs = FileSystem.get(new Configuration());    
+         FSDataOutputStream os = null;
+         String content="";
+         for(int i=0;i<pages;i++){
+           if(i==10452||i==10493||i==10647)
+            content=content+Integer.toString(i)+"\t0.0\n"; 
+           else
+            content=content+Integer.toString(i)+"\t0.0000919\n";    //prevent calculate for compute convience
+         }
+        byte[] buff = content.getBytes();
+        os = fs.create(new Path(path.get("pr")));
+        os.write(buff, 0, buff.length);
+        if(os != null)
+        os.close();
+        fs.close();
+       }
+       catch (Exception e){
+       
+       }
+  }
   private static void sortAndWrite(Map<String,String> path){
     try{
         Path pt=new Path(path.get("pr")+"/part-r-00000");
