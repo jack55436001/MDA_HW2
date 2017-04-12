@@ -43,12 +43,25 @@ public class MDA_HW2{
        try{
          FileSystem fs = FileSystem.get(new Configuration());    
          FSDataOutputStream os = null;
+         BufferedReader br=new BufferedReader(new InputStreamReader(fs.open(new Path(path.get("adj")))));
+         HashSet<Integer> filter = new HashSet<Integer>();
+         
+         String line;
+         line=br.readLine();
+         while (line != null){
+             String [] str = line.split("\t");
+             filter.add(Integer.parseInt(str[0]));
+             filter.add(Integer.parseInt(str[1]));
+             line=br.readLine();
+         }
+         DecimalFormat df = new DecimalFormat("0.0000000");
+  	     float ri = 1.0f/(float)filter.size();
          String content="";
          for(int i=0;i<pages;i++){
-           if(i==10452||i==10493||i==10647)
-            content=content+Integer.toString(i)+"\t0.0\n"; 
+           if(filter.contains(i))
+            content=content+Integer.toString(i)+"\t"+df.format(ri)+"\n";  
            else
-            content=content+Integer.toString(i)+"\t0.0000919\n";    //prevent calculate for compute convience
+            content=content+Integer.toString(i)+"\t0.0\n";             
          }
         byte[] buff = content.getBytes();
         os = fs.create(new Path(path.get("pr")));
